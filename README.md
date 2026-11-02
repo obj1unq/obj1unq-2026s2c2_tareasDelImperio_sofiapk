@@ -13,7 +13,7 @@ Cada tarea produce una cierta cantidad de recursos dependiendo del tiempo (medid
 El tiempo es un dato que se conoce al momento de consultar cuántos recursos se producen, mientras que el desgaste y el esfuerzo dependerán del caso según se detalla:
 
 * Siembra: Esta tarea puede realizarse en el valle o en las montañas (en cuyo caso se necesitan terrazas de cultivo). El desgaste producido por la siembra depende del tiempo de trabajo: el desgaste es 1 si la jornada es normal y se le suma 1 por cada hora extra. Por otro lado, la siembra conlleva un esfuerzo que depende del cultivo, entonces es configurable en cada caso. 
-   * La *siembra en el valle* tiene jornadas que no deberían superar las 8 horas, pero de depende de la estación del año: si es época de lluvias (de diciembre a junio) no puede realizarse y por lo tanto los recusos producidos equivalen a 0. 
+   * La *siembra en el valle* tiene jornadas que no deberían superar las 8 horas, pero depende de la estación del año: si es época de lluvias (de diciembre a junio) no puede realizarse y por lo tanto los recusos producidos equivalen a 0. 
    * La *siembra en terrazas* tiene jornadas de trabajo de hasta 6 horas (porque las personas están mas expuestas al viento y al sol). es una tarea que requiere conocer el recorrido del sol y siempre produce el triple de recursos debido al uso eficiente del agua, es decir que: recursos-producidos = 3 * 50 * (tiempo - desgaste) * esfuerzo
 
 * Mensaje: Los mensajes se llevan a pie por los caminos del imperio, codificados mediante el Quipu. El esfuerzo es siempre 1.4 mientras el desgaste se calcula como: tiempo / 4.
