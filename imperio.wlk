@@ -7,7 +7,8 @@ class Tarea{
 }
 
 class Siembra inherits Tarea {
-    var esfuerzo
+    var esfuerzoDeCultivar
+
     const desgastePorHoraExtra = 1 // magic number
 
     override method desgaste(tiempo) = desgastePorHoraExtra + self.horasExtra(tiempo)
@@ -16,9 +17,9 @@ class Siembra inherits Tarea {
 
     method jornadaNormal() // abstracto
 
-    override method esfuerzo() = esfuerzo
+    override method esfuerzo() = esfuerzoDeCultivar
 
-    method esfuerzo(_esfuerzo) { esfuerzo = _esfuerzo }
+    method esfuerzo(_esfuerzo) { esfuerzoDeCultivar = _esfuerzo }
 }
 
 class SiembraEnElValle inherits Siembra {
@@ -27,18 +28,8 @@ class SiembraEnElValle inherits Siembra {
     override method jornadaNormal() = 8
 
     override method recursosProducidos(tiempo) { 
-        return if ( epocaDelAño.sePuedeSembrar() ) {
-            super(tiempo) 
-        }
+        return if ( epocaDelAño.puedeRealizarse() ) super(tiempo) else 0
     }
-}
-
-class SiembraEnTerrazas inherits Siembra { // montaña
-    const triplicarRecursos = 3 // magic number
-
-    override method jornadaNormal() = 6
-
-    override method recursosProducidos(tiempo) = triplicarRecursos * super(tiempo)
 }
 
 object temporadaDeLluvia { // de diciembre a junio
@@ -51,6 +42,14 @@ object temporadaDeSequía {
     method puedeRealizarse() {
         return true
     }
+}
+
+class SiembraEnTerrazas inherits Siembra { // montaña
+    const triplicarRecursos = 3 // magic number
+
+    override method jornadaNormal() = 6
+
+    override method recursosProducidos(tiempo) = triplicarRecursos * super(tiempo)
 }
 
 class Mensaje {
