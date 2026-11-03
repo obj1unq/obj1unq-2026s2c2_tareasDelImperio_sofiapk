@@ -1,8 +1,5 @@
 class Tarea{
-
-    method recursosProducidos(tiempo) {
-        return 50 * (tiempo - self.desgaste(tiempo) * self.esfuerzo() )
-    }
+    method recursosProducidos(tiempo) = 50 * (tiempo - self.desgaste(tiempo) * self.esfuerzo() )
     
     method desgaste(tiempo) // abstracto
 
@@ -10,45 +7,60 @@ class Tarea{
 }
 
 class Siembra inherits Tarea {
-    const jornadaNormal = 8 // magic number
+    var esfuerzo
     const desgastePorHoraExtra = 1 // magic number
 
-    var estaciónDelAño = temporadaDeLluvia
+    override method desgaste(tiempo) = desgastePorHoraExtra + self.horasExtra(tiempo)
 
-    method estaciónDelAño() = estaciónDelAño
+    method horasExtra(tiempo) = ( tiempo - self.jornadaNormal() ).max(0)
 
-    method horasExtra(horasDedicadas) {
-        return (horasDedicadas - jornadaNormal).max(1)
-    }
+    method jornadaNormal() // abstracto
 
-    override method desgaste(horasDedicadas){
-        return desgastePorHoraExtra * self.horasExtra(horasDedicadas)
-    }
+    override method esfuerzo() = esfuerzo
 
-    
-
+    method esfuerzo(_esfuerzo) { esfuerzo = _esfuerzo }
 }
 
 class SiembraEnElValle inherits Siembra {
+    var property epocaDelAño
+    
+    override method jornadaNormal() = 8
 
+    override method recursosProducidos(tiempo) { 
+        return if ( epocaDelAño.sePuedeSembrar() ) {
+            super(tiempo) 
+        }
+    }
 }
 
-class SiembraEnTerrazas { // montaña
+class SiembraEnTerrazas inherits Siembra { // montaña
+    const triplicarRecursos = 3 // magic number
 
+    override method jornadaNormal() = 6
+
+    override method recursosProducidos(tiempo) = triplicarRecursos * super(tiempo)
 }
 
-object temporadaDeLluvia {
-  
+object temporadaDeLluvia { // de diciembre a junio
+    method puedeRealizarse() {
+        return false
+    }
 }
 
 object temporadaDeSequía {
-  
+    method puedeRealizarse() {
+        return true
+    }
 }
 
 class Mensaje {
+    method esfuerzo() = 1.4
 
+    method desgaste(tiempo) = tiempo / 4
 }
 
-class MensajeImperial inherits Mensaje {
+class MensajeImperial inherits Mensaje { // mensajes urgentes
+    override method esfuerzo() = 1.8
 
+    override method desgaste(tiempo) = ( super(tiempo) - 2 ).max(1)
 }
