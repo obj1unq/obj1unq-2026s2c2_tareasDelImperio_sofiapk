@@ -1,5 +1,5 @@
-class Tarea{
-    method recursosProducidos(tiempo) = 50 * (tiempo - self.desgaste(tiempo) * self.esfuerzo() )
+class Tarea {
+    method recursosProducidos(tiempo) = 50 * ( tiempo - self.desgaste(tiempo) ) * self.esfuerzo() 
     
     method desgaste(tiempo) // abstracto
 
@@ -52,10 +52,10 @@ class SiembraEnTerrazas inherits Siembra { // montaña
     override method recursosProducidos(tiempo) = triplicarRecursos * super(tiempo)
 }
 
-class Mensaje {
-    method esfuerzo() = 1.4
+class Mensaje inherits Tarea {
+    override method esfuerzo() = 1.4
 
-    method desgaste(tiempo) = tiempo / 4
+    override method desgaste(tiempo) = tiempo / 4
 }
 
 class MensajeImperial inherits Mensaje { // mensajes urgentes
