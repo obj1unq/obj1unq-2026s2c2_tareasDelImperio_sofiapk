@@ -1,7 +1,8 @@
 import imperio.*
 import habitantes.*
+import comunidades.*
 
-describe "Imperio Inca" {
+describe " 1. Imperio Inca " {
   const siembraDePapa = new SiembraEnElValle( esfuerzoDeCultivar = 1.2, epocaDelAño = temporadaDeSequía )
   const siembraDeMaíz = new SiembraEnTerrazas( esfuerzoDeCultivar = 1.5 )
   const rutaTamboCentral = new Mensaje()
@@ -25,5 +26,80 @@ describe "Imperio Inca" {
   test " 1.4 mensaje imperial " {
       assert.equals( 270, caminoDelSapaInca.recursosProducidos(4) )
       assert.equals( 810, caminoDelSapaInca.recursosProducidos(10) )
+  }
+}
+
+describe " 2. Habitantes " {
+  const siembraDePapa = new SiembraEnElValle( esfuerzoDeCultivar = 1.2, epocaDelAño = temporadaDeSequía )
+  const siembraDeMaíz = new SiembraEnTerrazas( esfuerzoDeCultivar = 1.5 )
+  const rutaTamboCentral = new Mensaje()
+  const caminoDelSapaInca = new MensajeImperial()
+  
+  const cusi = new Campesine( energía = 100, tiempoQueDedica = 4 )
+  const túpac = new Elite( energía = 200 )
+
+  test "2.1 energía de cusi al realizar tarea siembraDePapa dedicando 4hs" {
+    cusi.realizarTarea( siembraDePapa )
+    assert.equals( 82, cusi.energía() )
+  }
+
+  test "2.2 energía de cusi al realizar tarea rutaTamboCentral dedicando 4hs" {
+    cusi.realizarTarea( rutaTamboCentral )
+    assert.equals( 79, cusi.energía() )
+  }
+
+  test "2.3 cusi al realizar tarea con 15 de energía" {
+    cusi.energía(15)
+    assert.throwsException( { cusi.realizarTarea(rutaTamboCentral) } )
+  }
+
+  test "2.4 energía de túpac al realizar tarea siembraDeMaíz" {
+    túpac.realizarTarea( siembraDeMaíz )
+    assert.equals( 111.25 , túpac.energía() )
+  }
+
+  test "2.5 energía de túpac al realizar tarea caminoDelSapaInca" {
+    túpac.realizarTarea( caminoDelSapaInca )
+    assert.equals( 137.5 , túpac.energía() )
+  }
+}
+
+describe " 3. comunidades " {
+  const siembraDePapa = new SiembraEnElValle( esfuerzoDeCultivar = 1.2, epocaDelAño = temporadaDeSequía )
+  const rutaTamboCentral = new Mensaje()
+  const caminoDelSapaInca = new MensajeImperial()
+
+  const construcciónDeAndenesEnValleSagrado = new SiembraEnTerrazas( esfuerzoDeCultivar = 1.8 )
+  const construcciónDelTemploDelSol = new MensajeImperial()
+
+  const cusi = new Campesine( energía = 100, tiempoQueDedica = 4 )
+  const túpac = new Elite( energía = 200 )
+
+  const colcaAgrícola = new Colca( tareas = #{siembraDePapa, construcciónDeAndenesEnValleSagrado} )
+  const colcaCentral = new Colca( tareas = #{rutaTamboCentral, caminoDelSapaInca} )
+  const aylluReal = new Ayllu( colcas = #{colcaAgrícola, colcaCentral} )
+
+  test " 3.1 mejor colca del aylluReal para túpac " {
+    assert.equals( colcaAgrícola , aylluReal.mejorColcaParaHabitante(túpac) )
+  }
+
+  test " 3.2 mejor colca del aylluReal para cusi " {
+    assert.equals( colcaAgrícola , aylluReal.mejorColcaParaHabitante(cusi) )
+  }
+
+  test " 3.3 no hay colca suave para túpac " {
+    assert.that( aylluReal.colcasSuavesParaHabitante(túpac).isEmpty() )
+  }
+
+  test " 3.4 colcas suaves para cusi " {
+    assert.equals( #{colcaAgrícola} , aylluReal.colcasSuavesParaHabitante(cusi) )
+  }
+
+  test " 3.5 tareas más exigentes para túpac " {
+    assert.equals( #{construcciónDeAndenesEnValleSagrado, construcciónDelTemploDelSol} , aylluReal.tareasMásExigentesParaHabitante(túpac) )
+  }
+
+  test " 3.6 tareas más exigentes para cusi " {
+    assert.equals( #{construcciónDeAndenesEnValleSagrado, construcciónDelTemploDelSol} , aylluReal.tareasMásExigentesParaHabitante(cusi) )
   }
 }

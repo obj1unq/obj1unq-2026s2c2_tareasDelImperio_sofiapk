@@ -1,5 +1,11 @@
 class Tarea {
-    method recursosProducidos(tiempo) = 50 * ( tiempo - self.desgaste(tiempo) ) * self.esfuerzo() 
+    const valorQueMultiplica = 50 // magic number
+
+    method recursosProducidos(tiempo) = valorQueMultiplica * ( self.cálculoDeTiempoDedicado(tiempo) ) * self.esfuerzo() 
+
+    method cálculoDeTiempoDedicado(tiempo) {
+        return tiempo - self.desgaste(tiempo)
+    }
     
     method desgaste(tiempo) // abstracto
 
